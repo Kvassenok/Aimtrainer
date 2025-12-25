@@ -12,8 +12,8 @@ public class MenuManager : MonoBehaviour
 
     void Start()
     {
-        sensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
-        highScoreText.text = $"High Score: {ScoreManager.Instance.GetHighScore()}";
+        sensitivitySlider.value = PlayerPrefs.GetFloat("Чувствительность: ", 1f);
+        highScoreText.text = $"Рекорд очков: {ScoreManager.Instance.GetHighScore()}";
         UpdateSensitivityText();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -41,7 +41,7 @@ public class MenuManager : MonoBehaviour
     {
         if (sensitivityValueText != null)
         {
-            sensitivityValueText.text = $"Sensitivity: {sensitivitySlider.value.ToString("F1")}";
+            sensitivityValueText.text = $"Чувствительность: {sensitivitySlider.value.ToString("F1")}";
         }
     }
 }

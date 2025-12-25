@@ -6,6 +6,6 @@ public class SmallTarget : BaseTarget
     {
         base.Start();
         size = 0.1f;
-        points = 2;
+        points = 1;
     }
 }

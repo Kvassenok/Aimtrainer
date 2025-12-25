@@ -1,6 +1,7 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
 {
@@ -22,10 +23,22 @@ public class Timer : MonoBehaviour
             Debug.LogError("Timer: timerText is not assigned in Inspector!");
         }
     }
+    void OnEnable()  // Или в Awake()
+    {
+        if (SceneManager.GetActiveScene().name == "GameScene")  // Убедись, что ресет только в игровой сцене
+        {
+            GameEnded = false;
+            endTime = Time.time + gameTime;
+        }
+    }
 
     void Update()
     {
-        if (GameEnded || GameManager.IsPaused) return;
+        if (GameEnded || GameManager.IsPaused)
+        {
+            Debug.Log("Timer Update skipped: GameEnded=" + GameEnded + ", IsPaused=" + GameManager.IsPaused);
+            return;
+        }
 
         float timeLeft = endTime - Time.time;
 
@@ -35,6 +48,7 @@ public class Timer : MonoBehaviour
             OnGameEnded?.Invoke();
             ScoreManager.Instance.SaveHighScore();
             timeLeft = 0;
+            Debug.Log("Timer: Game ended! Invoking OnGameEnded.");
         }
 
         if (timerText != null)
