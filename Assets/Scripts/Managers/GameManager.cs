@@ -5,25 +5,45 @@ public class GameManager : MonoBehaviour
 {
     public static bool IsPaused { get; private set; }
 
-    [SerializeField] private CanvasGroup pausePanel;
+    private CanvasGroup pausePanel;
 
     void Awake()
     {
-        IsPaused = false;
-        if (pausePanel != null)
+        // Попробуем найти по тегу (добавьте тег "PausePanel" к объекту в Inspector > Tag)
+        GameObject panelObj = GameObject.FindWithTag("PausePanel");
+        if (panelObj == null)
         {
-            pausePanel.alpha = 0f;
-            pausePanel.interactable = false;
-            pausePanel.blocksRaycasts = false;
+            // Альтернатива по имени
+            panelObj = GameObject.Find("pausePanel");  // Или "Canvas/pausePanel"
         }
+
+        if (panelObj != null)
+        {
+            pausePanel = panelObj.GetComponent<CanvasGroup>();
+        }
+
+        if (pausePanel == null)
+        {
+            Debug.LogError("GameManager: pausePanel not found! Check name, tag or add CanvasGroup.");
+            return;
+        }
+
+        // Активируем объект, если он был выключен
+        panelObj.SetActive(true);
+
+        IsPaused = false;
+        Time.timeScale = 1f;
+        pausePanel.alpha = 0f;
+        pausePanel.interactable = false;
+        pausePanel.blocksRaycasts = false;
+        Debug.Log("PausePanel found, activated and hidden on Awake.");
     }
 
-    void Update()
+    void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            TogglePause();
-        }
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Debug.Log("GameManager Start: Cursor locked, ready for input.");
     }
 
     public void TogglePause()
@@ -35,6 +55,7 @@ public class GameManager : MonoBehaviour
             pausePanel.alpha = IsPaused ? 1f : 0f;
             pausePanel.interactable = IsPaused;
             pausePanel.blocksRaycasts = IsPaused;
+            Debug.Log("TogglePause: IsPaused=" + IsPaused + ", Alpha set to " + pausePanel.alpha + ", Panel active=" + pausePanel.gameObject.activeSelf);
         }
         Cursor.visible = IsPaused;
         Cursor.lockState = IsPaused ? CursorLockMode.None : CursorLockMode.Locked;
@@ -49,7 +70,6 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        Timer.GameEnded = false;
         ScoreManager.Instance.ResetScore();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

@@ -9,11 +9,20 @@ public class EndPanel : MonoBehaviour
     void OnEnable()
     {
         Timer.OnGameEnded += OnGameEnded;
+        Debug.Log("EndPanel: Subscribed to OnGameEnded.");  // Новый дебаг
     }
 
     void OnDisable()
     {
         Timer.OnGameEnded -= OnGameEnded;
+        Debug.Log("EndPanel: Unsubscribed from OnGameEnded.");
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))  // Тест на пробел
+        {
+            OnGameEnded();
+        }
     }
 
     void Awake()
@@ -34,6 +43,7 @@ public class EndPanel : MonoBehaviour
             Debug.LogError("EndPanel: canvasGroup or highScoreText is null! Assign in Inspector.");
             return;
         }
+        Debug.Log("EndPanel: OnGameEnded called! Showing panel.");  // Новый дебаг
         canvasGroup.alpha = 1f;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;

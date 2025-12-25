@@ -12,12 +12,20 @@ public class MenuManager : MonoBehaviour
 
     void Start()
     {
-        sensitivitySlider.value = PlayerPrefs.GetFloat("Чувствительность: ", 1f);
+        float savedSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
+        sensitivitySlider.value = savedSensitivity;
+        sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
         highScoreText.text = $"Рекорд очков: {ScoreManager.Instance.GetHighScore()}";
         UpdateSensitivityText();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         difficultyPanel.SetActive(false);
+    }
+    private void OnSensitivityChanged(float value)
+    {
+        UpdateSensitivityText();
+        PlayerPrefs.SetFloat("MouseSensitivity", value);
+        PlayerPrefs.Save();  // Сохраняем сразу
     }
 
     public void ShowDifficultyPanel()
@@ -34,6 +42,7 @@ public class MenuManager : MonoBehaviour
 
     public void StartGame()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("GameScene");
     }
 

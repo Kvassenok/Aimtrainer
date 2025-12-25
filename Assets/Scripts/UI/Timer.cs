@@ -11,21 +11,36 @@ public class Timer : MonoBehaviour
     [SerializeField] TMP_Text timerText;
 
     float endTime;
-    const float gameTime = 15f;
+    const float gameTime = 5f;
+
+    public static Timer Instance { get; private set; }  // Новый singleton
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);  // Уничтожаем дубликат
+            Debug.Log("Timer duplicate destroyed.");
+            return;
+        }
+        Instance = this;
+    }
 
     void Start()
     {
-        GameEnded = false;  // Уже есть, но убедись
-        OnGameEnded = null;  // Очисти делегат, чтобы избежать дубликатов подписок
+        GameEnded = false;
+        // Удалите OnGameEnded = null; — чтобы не очищать подписчиков каждый раз
         endTime = Time.time + gameTime;
         if (timerText == null)
         {
             Debug.LogError("Timer: timerText is not assigned in Inspector!");
         }
+        Debug.Log("Timer Started: GameEnded = " + GameEnded);
     }
-    void OnEnable()  // Или в Awake()
+
+    void OnEnable()
     {
-        if (SceneManager.GetActiveScene().name == "GameScene")  // Убедись, что ресет только в игровой сцене
+        if (SceneManager.GetActiveScene().name == "GameScene")
         {
             GameEnded = false;
             endTime = Time.time + gameTime;
@@ -48,7 +63,7 @@ public class Timer : MonoBehaviour
             OnGameEnded?.Invoke();
             ScoreManager.Instance.SaveHighScore();
             timeLeft = 0;
-            Debug.Log("Timer: Game ended! Invoking OnGameEnded.");
+            Debug.Log("Timer: Game ended! Invoking OnGameEnded.");  // Confirm in console
         }
 
         if (timerText != null)
