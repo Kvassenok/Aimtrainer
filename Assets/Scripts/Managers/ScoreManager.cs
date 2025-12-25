@@ -7,8 +7,7 @@ public class ScoreManager : MonoBehaviour
     private int currentScore = 0;
     private int highScore = 0;
     private int misses = 0;
-    private string highScoreFile = Application.persistentDataPath + "/highscore.txt";
-
+    private string highScoreFile;
     void Awake()
     {
         if (Instance == null)
@@ -16,6 +15,7 @@ public class ScoreManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        highScoreFile = Application.persistentDataPath + "/highscore.txt";
         LoadHighScore();
     }
 

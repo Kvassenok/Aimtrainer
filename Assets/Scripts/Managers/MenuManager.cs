@@ -22,6 +22,7 @@ public class MenuManager : MonoBehaviour
 
     public void ShowDifficultyPanel()
     {
+        Debug.Log("Button clicked");
         difficultyPanel.SetActive(true);
     }
 

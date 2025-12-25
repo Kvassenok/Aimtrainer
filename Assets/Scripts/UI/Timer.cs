@@ -10,11 +10,12 @@ public class Timer : MonoBehaviour
     [SerializeField] TMP_Text timerText;
 
     float endTime;
-    const float gameTime = 60f;
+    const float gameTime = 15f;
 
     void Start()
     {
-        GameEnded = false;
+        GameEnded = false;  // Уже есть, но убедись
+        OnGameEnded = null;  // Очисти делегат, чтобы избежать дубликатов подписок
         endTime = Time.time + gameTime;
         if (timerText == null)
         {
